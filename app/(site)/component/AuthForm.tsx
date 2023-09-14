@@ -3,14 +3,15 @@
 import Button from "@/app/component/Button";
 import Input from "@/app/component/inputs/Input";
 import * as React from "react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import AuthSocialButton from "./AuthSocialButton ";
 import { BsGithub, BsGoogle } from "react-icons/bs";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 type Variant = "LOGIN" | "REGISTER";
 export interface IAppProps {}
@@ -18,6 +19,16 @@ export interface IAppProps {}
 export default function AuthForm(props: IAppProps) {
   const [variant, setVariant] = useState<Variant>("LOGIN");
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const session = useSession();
+
+  console.log(session);
+
+  useEffect(() => {
+    if (session?.status === "authenticated") {
+      router.push("/users");
+    }
+  }, [session?.status]);
 
   const toggleVariant = useCallback(() => {
     if (variant === "LOGIN") {
@@ -43,6 +54,12 @@ export default function AuthForm(props: IAppProps) {
     if (variant === "REGISTER") {
       axios
         .post("/api/register", data)
+        .then((data) => {
+          signIn("credentials", {
+            ...data,
+            redirect: false,
+          });
+        })
         .catch(() => {
           toast.error("Register error", {
             position: "bottom-center",
@@ -87,6 +104,7 @@ export default function AuthForm(props: IAppProps) {
               progress: undefined,
               theme: "light",
             });
+            router.push("/users");
           }
         })
         .finally(() => setIsLoading(false));

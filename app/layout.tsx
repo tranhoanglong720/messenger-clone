@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 import { ToastContainer, toast } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
+import AuthContext from "./context/AuthContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,8 +22,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        {children}
-        <ToastContainer />
+        <AuthContext>
+          {children}
+
+          <ToastContainer />
+        </AuthContext>
       </body>
     </html>
   );
