@@ -7,6 +7,10 @@ import { useCallback, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import AuthSocialButton from "./AuthSocialButton ";
 import { BsGithub, BsGoogle } from "react-icons/bs";
+import axios from "axios";
+import { toast } from "react-toastify";
+
+import { signIn } from "next-auth/react";
 
 type Variant = "LOGIN" | "REGISTER";
 export interface IAppProps {}
@@ -34,9 +38,75 @@ export default function AuthForm(props: IAppProps) {
     },
   });
 
-  const onsubmit = () => {};
+  const onsubmit = (data: any) => {
+    setIsLoading(true);
+    if (variant === "REGISTER") {
+      axios
+        .post("/api/register", data)
+        .catch(() => {
+          toast.error("Register error", {
+            position: "bottom-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        })
+        .finally(() => setIsLoading(false));
+    }
+    if (variant === "LOGIN") {
+      signIn("credentials", {
+        ...data,
+        redirect: false,
+      })
+        .then((callback) => {
+          console.log(callback);
+          if (callback?.error) {
+            toast.error("Invalid credentials", {
+              position: "bottom-center",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+          }
+          if (callback?.ok && !callback?.error) {
+            toast.success("Logged in!", {
+              position: "bottom-center",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+          }
+        })
+        .finally(() => setIsLoading(false));
+    }
+  };
 
-  const socialAction = (data: string) => {};
+  const socialAction = (action: string) => {
+    setIsLoading(true);
+
+    signIn(action, { redirect: false })
+      .then((callback) => {
+        if (callback?.error) {
+          toast.error("Invalid credentials!");
+        }
+        if (callback?.ok && !callback?.error) {
+          toast.success("Logged in!");
+        }
+      })
+      .finally(() => setIsLoading(false));
+  };
 
   return (
     <div className="mt-8 sm:w-full lg:max-w-md">
