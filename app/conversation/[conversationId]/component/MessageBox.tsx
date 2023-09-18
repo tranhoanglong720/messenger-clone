@@ -16,7 +16,11 @@ export interface IAppProps {
 
 export default function MessageBox(props: IAppProps) {
   const session = useSession();
-  const isOwn = session.data?.user?.email !== props.data?.sender?.email;
+  const isOwn = session.data?.user?.email === props.data?.sender?.email;
+  const seenList = (props.data?.seen || [])
+    .filter((user) => user.email !== props.data?.sender?.email)
+    .map((user) => user.name)
+    .join(", ");
 
   const container = clsx(
     `
@@ -30,8 +34,6 @@ export default function MessageBox(props: IAppProps) {
     isOwn ? "bg-sky-300 text-white" : "bg-gray-100",
     props.data?.image ? "rounded-md p-0" : "rounded-xl py-2 px-3"
   );
-
-  console.log("pr", props);
 
   return (
     <div className={container}>
@@ -63,14 +65,12 @@ export default function MessageBox(props: IAppProps) {
             </div>
           </div>
 
-          {/* <ImageModal src={data.image} isOpen={imageModalOpen} onClose={() => setImageModalOpen(false)} /> */}
           <div>
             {props.data?.image ? (
               <Image
                 alt="Image"
-                height="288"
-                width="288"
-                // onClick={() => setImageModalOpen(true)}
+                height="150"
+                width="150"
                 src={props.data?.image}
                 className="
                 object-cover 
@@ -78,23 +78,24 @@ export default function MessageBox(props: IAppProps) {
                 hover:scale-110 
                 transition 
                 translate
+                p-4           
               "
               />
             ) : (
               <div>{props.data?.body}</div>
             )}
           </div>
-          {/* {isLast && isOwn && seenList.length > 0 && (
-          <div 
-            className="
+          {props.isLast && isOwn && seenList.length > 0 && (
+            <div
+              className="
             text-xs 
             font-light 
             text-gray-500
             "
-          >
-            {`Seen by ${seenList}`}
-          </div>
-        )} */}
+            >
+              {`Seen by ${seenList}`}
+            </div>
+          )}
         </div>
       </div>
     </div>
