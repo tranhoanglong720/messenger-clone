@@ -13,8 +13,6 @@ export async function POST(request: Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    console.log("zxc", body);
-
     const newMessage = await prisma.message.create({
       include: {
         seen: true,

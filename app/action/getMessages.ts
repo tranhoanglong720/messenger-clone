@@ -3,7 +3,7 @@ import getCurrentUser from "./getCurrentUser";
 const getMessages = async (conversationId: string) => {
   try {
     const currentUser = await getCurrentUser();
-    if (currentUser?.email) {
+    if (!currentUser?.email) {
       return null;
     }
     const messages = prisma?.message.findMany({

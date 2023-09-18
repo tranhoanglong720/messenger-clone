@@ -3,9 +3,11 @@
 import { FullMessageType } from "@/app/types";
 import { useSession } from "next-auth/react";
 import * as React from "react";
+import Image from "next/image";
 
 import clsx from "clsx";
 import Avatar from "@/app/component/avatar/Avatar";
+import { format } from "date-fns";
 
 export interface IAppProps {
   data: FullMessageType;
@@ -29,6 +31,8 @@ export default function MessageBox(props: IAppProps) {
     props.data?.image ? "rounded-md p-0" : "rounded-xl py-2 px-3"
   );
 
+  console.log("pr", props);
+
   return (
     <div className={container}>
       <div className={avatar}>
@@ -40,50 +44,46 @@ export default function MessageBox(props: IAppProps) {
             <div
               className={clsx(
                 `
-          text-sm 
-          font-bold`,
+                text-sm 
+                font-bold`,
                 isOwn ? " text-sky-600" : " text-gray-500"
               )}
             >
-              Long
+              {props.data.sender.name}
             </div>
             <div
               className={clsx(
                 `
-          text-sm 
-          font-bold`,
+              text-sm 
+              font-bold`,
                 isOwn ? " text-sky-600" : " text-gray-500"
               )}
             >
-              12:00 AM
+              {format(new Date(props.data.createdAt), "p")}
             </div>
-          </div>
-          <div>
-            asdasdasdasdasdasdasdasdsadasdasdasdasdasdasdasdasdasdasdasdsadasdasdasdasdasdasdasdasdasdasdasdsada
-            sdasdasdasdasdasdasdasdasdasdasdsadasdasdasdasdasdasdasdasdasdasdasdsadasdasdasdasdasdasdasdasdasdasdasdsadasdasdasd
-            asdasdasdasdasdasdasdasdsadasdasdasdasdasdasdasdasdasdasdasdsadasdasdasdasdasdasdasdasdasdasdasdsadasdasdasd
           </div>
 
           {/* <ImageModal src={data.image} isOpen={imageModalOpen} onClose={() => setImageModalOpen(false)} /> */}
-          {/* {data.image ? (
-            <Image
-              alt="Image"
-              height="288"
-              width="288"
-              onClick={() => setImageModalOpen(true)} 
-              src={data.image} 
-              className="
+          <div>
+            {props.data?.image ? (
+              <Image
+                alt="Image"
+                height="288"
+                width="288"
+                // onClick={() => setImageModalOpen(true)}
+                src={props.data?.image}
+                className="
                 object-cover 
                 cursor-pointer 
                 hover:scale-110 
                 transition 
                 translate
               "
-            />
-          ) : (
-            <div>{data.body}</div>
-          )}
-        </div> */}
+              />
+            ) : (
+              <div>{props.data?.body}</div>
+            )}
+          </div>
           {/* {isLast && isOwn && seenList.length > 0 && (
           <div 
             className="

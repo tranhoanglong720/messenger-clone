@@ -67,21 +67,30 @@ export default function ItemConversation(props: IAppProps) {
     >
       <Avatar user={otherUser!} />
       <div className="flex flex-col">
-        <span className="text-sm">{otherUser?.name}</span>
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center gap-x-3">
+          <span className="text-sm">{otherUser?.name}</span>
+
           {lastMessage?.createdAt && (
             <p
               className="
-                  text-xs 
+                  text-sm
                   text-gray-400 
                   font-light
+                  leading-5
+                  text-center
                 "
             >
               {format(new Date(lastMessage.createdAt), "p")}
             </p>
           )}
-          <span className="text-sm"> {lastMessageText}</span>
         </div>
+        <span
+          className="    text-xs 
+                  text-gray-400 
+                  font-light"
+        >
+          {lastMessageText}
+        </span>
       </div>
     </div>
   );

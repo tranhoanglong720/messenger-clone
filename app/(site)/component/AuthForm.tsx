@@ -22,8 +22,6 @@ export default function AuthForm(props: IAppProps) {
   const router = useRouter();
   const session = useSession();
 
-  console.log(session);
-
   useEffect(() => {
     if (session?.status === "authenticated") {
       router.push("/users");
@@ -80,7 +78,6 @@ export default function AuthForm(props: IAppProps) {
         redirect: false,
       })
         .then((callback) => {
-          console.log(callback);
           if (callback?.error) {
             toast.error("Invalid credentials", {
               position: "bottom-center",
