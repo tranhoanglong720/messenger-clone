@@ -7,8 +7,10 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { CldUploadButton } from "next-cloudinary";
 import axios from "axios";
 import useConversation from "@/app/hooks/useConversation";
-export interface IAppProps {}
+import io from "socket.io-client";
 
+export interface IAppProps {}
+let socket: any;
 export default function Form(props: IAppProps) {
   const { conversationId } = useConversation();
   const {
@@ -21,10 +23,22 @@ export default function Form(props: IAppProps) {
       message: "",
     },
   });
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     setValue("message", "", { shouldValidate: true });
-    axios.post("/api/messages", {
+
+    const result = await axios.post("/api/messages", {
       ...data,
+      conversationId: conversationId,
+    });
+
+    await fetch("/api/socket");
+
+    socket = io({
+      path: "/api/socket_io",
+    });
+
+    socket.emit(`send-message`, {
+      data: result.data,
       conversationId: conversationId,
     });
   };
