@@ -18,9 +18,9 @@ export default function SocketHandler(req: any, res: any) {
 
   io.on("connection", (socket) => {
     socket.on("send-message", async ({ conversationId, data }) => {
-      console.log("As", data);
+      console.log("Ass", data);
       const dataMess = await getMessages(conversationId);
-      io.emit(`receive-message`, dataMess);
+      io.emit(`receive-message`, data);
     });
   });
 

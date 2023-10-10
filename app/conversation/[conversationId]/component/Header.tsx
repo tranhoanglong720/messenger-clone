@@ -28,7 +28,6 @@ export default function Header(props: IAppProps) {
     return isActive ? "Active" : "Offline";
   }, [props.conversation, isActive]);
 
-  console.log("a", isActive);
   return (
     <div
       className="

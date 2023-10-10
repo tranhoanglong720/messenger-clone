@@ -2,7 +2,9 @@ import { NextResponse } from "next/server";
 
 import prisma from "@/app/libs/prismadb";
 import getCurrentUser from "@/app/action/getCurrentUser";
+import { io } from "socket.io-client";
 
+let socket: any;
 export async function POST(request: Request, res: any) {
   try {
     const currentUser = await getCurrentUser();
@@ -56,6 +58,17 @@ export async function POST(request: Request, res: any) {
         },
       },
     });
+
+    // await fetch("/api/socket");
+
+    // socket = io({
+    //   path: "/api/socket_io",
+    // });
+
+    // socket.emit(`send-message`, {
+    //   conversationId: conversationId,
+    //   data: newMessage,
+    // });
 
     return NextResponse.json(newMessage);
   } catch (error) {

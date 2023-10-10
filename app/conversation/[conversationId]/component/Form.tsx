@@ -31,16 +31,19 @@ export default function Form(props: IAppProps) {
       conversationId: conversationId,
     });
 
-    await fetch("/api/socket");
+    if (result) {
+      console.log("re", result);
+      await fetch("/api/socket");
 
-    socket = io({
-      path: "/api/socket_io",
-    });
+      socket = io({
+        path: "/api/socket_io",
+      });
 
-    socket.emit(`send-message`, {
-      data: result.data,
-      conversationId: conversationId,
-    });
+      socket.emit(`send-message`, {
+        conversationId: conversationId,
+        data: result.data,
+      });
+    }
   };
   const handleUpload = (result: any) => {
     axios.post("/api/messages", {

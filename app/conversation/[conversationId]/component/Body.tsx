@@ -38,8 +38,9 @@ export default function Body(props: IAppProps) {
       setMessages((pre) => [...pre, data]);
     });
   }
+
   // const messagess = getMessages("6503d5511c4bf7b1e0c91b4d");
-  console.log(messages);
+
   const { conversationId } = useConversation();
 
   useEffect(() => {
@@ -48,7 +49,7 @@ export default function Body(props: IAppProps) {
 
   return (
     <div className="flex-1 overflow-y-auto">
-      {props.messages?.map((item: FullMessageType, index: number) => (
+      {messages?.map((item: FullMessageType, index: number) => (
         <MessageBox
           key={item.id}
           isLast={index === props.messages?.length - 1}
